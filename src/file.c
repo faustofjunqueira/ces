@@ -50,8 +50,8 @@ int read_instr_of_file(FILE *file, short int *memory){
 	return 1;
 }
 
-FILE *init_file(char* file_name[]){
-	if ( strstr(file_name, ".ces") == NULL){
+FILE *init_file(char* file_name){
+	if (strstr(file_name, ".hex") == NULL){
 		printf("Erro na inicialização do Arquivo\n");
 		return NULL;
 	}

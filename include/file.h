@@ -25,5 +25,5 @@ Comentarios:
 #define FILE_H
 int read_instr_of_file(FILE *file, short int *memory);
 void printArray(short int *memory, int n);
-FILE *init_file();
+FILE *init_file(char* file_name);
 #endif // FILE_H

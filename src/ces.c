@@ -6,7 +6,7 @@
 
 void printRegistradores(Processador p){
 	printf("Registrador P: %hX\n",p.regP);
-	printf("Registrador T: %hX\n",p.regT);
+	printf("Registrador T: %d\n",p.regT);
 	printf("Registrador C: %d\n",p.regC);
 	printf("-------------------\n");
 }
@@ -51,7 +51,7 @@ void ESC(Processador* p, short int* memoria, unsigned short int posMemoria){
 }
 
 void DNP(Processador* p, unsigned short int posMemoria){
-	if(p->regC == 0)
+	if(p->regC == 1)
 		p->regP = posMemoria;
 	else
 		p->regP++;
@@ -61,7 +61,7 @@ void exec(Processador* p, short int* memoria, unsigned short int org, unsigned s
 	unsigned short int i = 0;
 	p->regP = org;
 	while(i<EOP){
-		switch(-1*(memoria[p->regP]>>14)){
+		switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
 			case 0:
 				LE(p,memoria,memoria[p->regP]);
 				break;
@@ -72,7 +72,7 @@ void exec(Processador* p, short int* memoria, unsigned short int org, unsigned s
 				SUB(p,memoria,memoria[p->regP]-0x8000);
 				break;
 			case 3:
-				DNP(p,p->regP-0xc000);
+				DNP(p,memoria[p->regP]-0xc000);
 				break;
 		}
 		printRegistradores(*p);

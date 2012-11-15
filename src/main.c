@@ -3,18 +3,17 @@
 #include "ces.h"
 #include "file.h"
 
-int main(){
-	short int *memoria = init_memory(16*1024); // 16K palavras de 16 bits
-	Processador *CES = init_ces();
-	FILE *file = init_file();
-	int n_clocks;
-	short int end_start;
-	printf("Numero de clocks: ");
-	scanf("%d", &n_clocks);
-	printf("\n");
-	printf("Endereco Inicial: ");
-	scanf("%hX", &end_start);
-	printf("\n");
+int main(int argc, char* argv){
+	Processador *CES;
+	FILE *file;
+	short int *memoria;
+	unsigned short int EOP;
+	unsigned short int org;
+	
+	CES = init_ces();
+	memoria = init_memory(16*1024); // 16K palavras de 16 bits
+	file = init_file();
+
 	if(file == NULL){
 		printf("Erro na leitura do arquivo\n");
 		return 0;
@@ -25,7 +24,7 @@ int main(){
 		return -1;
 	}else{
 		fclose(file);
-		exec(CES,memoria,end_start,n_clocks);
+		exec(CES,memoria,org,memoria);
 	}
 
 	return 0;

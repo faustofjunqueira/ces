@@ -50,11 +50,7 @@ int read_instr_of_file(FILE *file, short int *memory){
 	return 1;
 }
 
-FILE *init_file(){
-	char file_name[64];
-	printf("Nome do arquivo de entrada: ");
-	gets(file_name);
-	printf("\n");
+FILE *init_file(char* file_name[]){
 	if ( strstr(file_name, ".ces") == NULL){
 		printf("Erro na inicialização do Arquivo\n");
 		return NULL;

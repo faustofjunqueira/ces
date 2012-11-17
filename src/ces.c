@@ -13,9 +13,9 @@ void printRegistradores(Processador p){
 
 Processador *init_ces(){
 	Processador *p = (Processador*) malloc (sizeof(Processador));
-	p->regP = 0;
+	p->regP = 0x0400;
 	p->regT = 0;
-	p->regC = 1;
+	p->regC = 0;
 	return p;
 }
 
@@ -57,25 +57,19 @@ void DNP(Processador* p, unsigned short int posMemoria){
 		p->regP++;
 }
 
-void exec(Processador* p, short int* memoria, unsigned short int org, unsigned short int EOP){
-	unsigned short int i = 0;
-	p->regP = org;
-	while(i<EOP){
-		switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
-			case 0:
-				LE(p,memoria,memoria[p->regP]);
-				break;
-			case 1:
-				ESC(p,memoria,memoria[p->regP]-0x4000);
-				break;
-			case 2:
-				SUB(p,memoria,memoria[p->regP]-0x8000);
-				break;
-			case 3:
-				DNP(p,memoria[p->regP]-0xc000);
-				break;
-		}
-		printRegistradores(*p);
-		i++;
+void exec(Processador* p, short int* memoria){
+	switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
+		case 0:
+			LE(p,memoria,memoria[p->regP]);
+			break;
+		case 1:
+			ESC(p,memoria,memoria[p->regP]-0x4000);
+			break;
+		case 2:
+			SUB(p,memoria,memoria[p->regP]-0x8000);
+			break;
+		case 3:
+			DNP(p,memoria[p->regP]-0xc000);
+			break;
 	}
 }

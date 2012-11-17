@@ -17,6 +17,7 @@ int main(int argc, char** argv){
 	unsigned short int eop = 4098; // Programa de 4K
 	unsigned short int k;
 	char* p;
+	int output_file = 0;
 	
 	if(argc>=3){
 		CES = init_ces();
@@ -28,6 +29,8 @@ int main(int argc, char** argv){
 					CES->regP = (unsigned short int) strtoul(argv[k+1],&p,16);
 				else if(strcmp(argv[k],"-i")==0)
 					eop = (unsigned short int) atoi(argv[k+1]);
+				else if(strcmp(argv[k],"-o")==0) 
+					output_file = 1;
 		}
 	}else{
 		printModoDeUso(argv[0]);

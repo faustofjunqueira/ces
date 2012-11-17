@@ -5,7 +5,7 @@ typedef struct{
 	short int regT; //trabalho
 	short int regC; //vai um
 }Processador;
-void printRegistradores(Processador p);
+void printRegistradores(Processador p, char *st);
 Processador *init_ces();
 short int *init_memory(int l);
 void SUB(Processador* p,short int* memoria, unsigned short int posMemoria);

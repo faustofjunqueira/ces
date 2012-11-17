@@ -4,11 +4,10 @@
 #include "ces.h"
 #include "rom.h"
 
-void printRegistradores(Processador p){
-	printf("Registrador P: %hX\n",p.regP);
-	printf("Registrador T: %d\n",p.regT);
-	printf("Registrador C: %d\n",p.regC);
-	printf("-------------------\n");
+void printRegistradores(Processador p, char *st){
+	char *buffer = (char*) malloc (sizeof(char) * 40*3.5);
+	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %d\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
+	strcat(st,buffer);
 }
 
 Processador *init_ces(){

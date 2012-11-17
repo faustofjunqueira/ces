@@ -56,7 +56,7 @@ void DNP(Processador* p, unsigned short int posMemoria){
 		p->regP++;
 }
 
-void exec(Processador* p, short int* memoria){
+void exec(Processador* p, short int* memoria,char* out){
 	switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
 		case 0:
 			LE(p,memoria,memoria[p->regP]);
@@ -71,4 +71,5 @@ void exec(Processador* p, short int* memoria){
 			DNP(p,memoria[p->regP]-0xc000);
 			break;
 	}
+	printRegistradores(*p, out);
 }

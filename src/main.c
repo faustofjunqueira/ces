@@ -17,7 +17,7 @@ int main(int argc, char** argv){
 	unsigned short int eop = 4098; // Programa de 4K
 	unsigned short int k;
 	char* p;
-	int output_file = 0;
+	char* output_file = NULL;
 	
 	if(argc>=3){
 		CES = init_ces();
@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 				else if(strcmp(argv[k],"-i")==0)
 					eop = (unsigned short int) atoi(argv[k+1]);
 				else if(strcmp(argv[k],"-o")==0) 
-					output_file = 1;
+					output_file = argv[k+1];
 		}
 	}else{
 		printModoDeUso(argv[0]);
@@ -49,13 +49,22 @@ int main(int argc, char** argv){
 	
 	fclose(file);
 	
+	char* out = (char*) malloc (sizeof(char)*(40*3.5*eop));
+
 	//Loop principal do processador
 	for(k=0;k<eop;k++){
 		// Processador sendo executado neste instante
-		exec(CES,memoria);
+		exec(CES,memoria,out);
 		// Fim da execução do processador
 	}
-	printRegistradores(*CES);
+
+	if(output_file!=NULL){
+		FILE *output = fopen(output_file,"w");
+		fprintf(output,"%s",out);
+		fclose(output);
+	}
+
+	printf("%s",out);
 	
 	return 0;
 }

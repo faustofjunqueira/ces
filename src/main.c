@@ -5,19 +5,24 @@
 #include "file.h"
 
 void printModoDeUso(char* execFile){
-	printf("Uso: %s -f file.hex [--org origem] [-i qtd_iteracoes]",execFile);
-	printf("\n\torigem e qtd_iteracoes são valores inteiros.");
-	printf("\n\torigem deve ser um valor em HEXADECIMAL.\n\n");
+	printf("Uso: %s -f file.hex [opcoes]\n\n",execFile);
+	printf("OPCOES:\n");
+	printf("\t--org origem\tValor inteiro positivo HEXADECIMAL que define a posicao inicial de execucao\n");
+	printf("\t-i iteracoes\tValor inteiro positivo que define o numero de instrucoes que serao executadas\n");
+	printf("\t-o saida\tDefine um arquivo que vai conter a saida\n");
+	printf("\t--interactive \tExibe a execucao passo a passo para o usuario.\n\n");
 }
 
 int main(int argc, char** argv){
 	Processador *CES;
-	FILE *file;
-	short int *memoria;
+	FILE *file = NULL;
+	FILE *output = NULL;
+	short int *memoria = NULL;
 	unsigned short int eop = 4098; // Programa de 4K
 	unsigned short int k;
-	char* p;
+	char* p = NULL;
 	char* output_file = NULL;
+	int interactive = 0;
 	
 	if(argc>=3){
 		CES = init_ces();
@@ -31,6 +36,8 @@ int main(int argc, char** argv){
 					eop = (unsigned short int) atoi(argv[k+1]);
 				else if(strcmp(argv[k],"-o")==0) 
 					output_file = argv[k+1];
+				else if(strcmp(argv[k],"--interactive")==0)
+					interactive = 1;
 		}
 	}else{
 		printModoDeUso(argv[0]);
@@ -51,20 +58,29 @@ int main(int argc, char** argv){
 	
 	char* out = (char*) malloc (sizeof(char)*(40*3.5*eop));
 
+	if(output_file!=NULL) output = fopen(output_file,"w");
+
 	//Loop principal do processador
-	for(k=0;k<eop;k++){
+	for(k=0;k<=eop;k++){
 		// Processador sendo executado neste instante
 		exec(CES,memoria,out);
 		// Fim da execução do processador
+		
+		if(interactive){
+			printf("%s",out);
+			if(output_file!=NULL) fprintf(output,"%s",out);
+			getchar();
+			memset(out,0,sizeof(char)*strlen(out));
+		}
+
 	}
 
 	if(output_file!=NULL){
-		FILE *output = fopen(output_file,"w");
-		fprintf(output,"%s",out);
+		if(!interactive) fprintf(output,"%s",out);
 		fclose(output);
+	}else{
+		printf("%s",out);
 	}
 
-	printf("%s",out);
-	
 	return 0;
 }

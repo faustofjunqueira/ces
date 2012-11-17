@@ -58,3 +58,5 @@ FILE *init_file(char* file_name){
 	FILE *f = fopen(file_name, "r");
 	return f;
 }
+
+

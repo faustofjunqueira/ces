@@ -4,11 +4,13 @@
 #include "ces.h"
 #include "rom.h"
 
-void printRegistradores(Processador p){
-	printf("Registrador P: %hX\n",p.regP);
-	printf("Registrador T: %d\n",p.regT);
-	printf("Registrador C: %d\n",p.regC);
-	printf("-------------------\n");
+void printRegistradores(Processador p, char *st){
+	char *buffer = (char*) malloc (sizeof(char) * 40*3.5);
+	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %d\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
+	strcat(st,buffer);
+	//printf("Registrador T: %d\n",p.regT);
+	//printf("Registrador C: %d\n",p.regC);
+	//printf("-------------------\n");
 }
 
 Processador *init_ces(){
@@ -57,9 +59,10 @@ void DNP(Processador* p, unsigned short int posMemoria){
 		p->regP++;
 }
 
-void exec(Processador* p, short int* memoria, unsigned short int org, unsigned short int EOP){
+char *exec(Processador* p, short int* memoria, unsigned short int org, unsigned short int EOP){
 	unsigned short int i = 0;
 	p->regP = org;
+	char* out = (char*) malloc (sizeof(char)*(40*3.5*EOP));
 	while(i<EOP){
 		switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
 			case 0:
@@ -75,7 +78,8 @@ void exec(Processador* p, short int* memoria, unsigned short int org, unsigned s
 				DNP(p,memoria[p->regP]-0xc000);
 				break;
 		}
-		printRegistradores(*p);
+		printRegistradores(*p, out);
 		i++;
 	}
+	return out;
 }

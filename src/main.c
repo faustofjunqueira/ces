@@ -11,7 +11,7 @@ void printModoDeUso(char* execFile){
 	printf("\t-i iteracoes\tValor inteiro positivo que define o numero de instrucoes que serao executadas\n");
 	printf("\t-o saida\tDefine um arquivo que vai conter a saida\n");
 	printf("\t--interactive \tExibe a execucao passo a passo para o usuario.\n");
-	printf("\t--IO \tAtiva o input e output do CES.\n\n");
+	printf("\t--IO \t\tAtiva o input e output do CES.\n\n");
 }
 
 int main(int argc, char** argv){
@@ -65,23 +65,21 @@ int main(int argc, char** argv){
 	if(output_file!=NULL) output = fopen(output_file,"w");
 
 	//Loop principal do processador
-	for(k=0;k<=eop;k++){
+	for(k=0;k<eop;k++){
 		//Inicio do tratamento do IO
 		if(inputOutput){
 			printf("%c",memoria[0x3ffe]);
 			memoria[0x3ffe] = 0x0000;
-
 			if(memoria[CES->regP]==0x3fff){
-				printf(">>");
 				memoria[0x3fff] = getchar();
 			}
 		}
 		//Fim do tratamento do IO
-
+		
 		// Processador sendo executado neste instante
 		exec(CES,memoria);
 		// Fim da execução do processador
-
+		
 		if(output_file==NULL) memset(out,0,sizeof(char)*strlen(out));
 		printRegistradores(*CES,out);
 

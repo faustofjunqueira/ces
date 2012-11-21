@@ -25,7 +25,7 @@ int main(int argc, char** argv){
 	char* output_file = NULL;
 	int interactive = 0;
 	int inputOutput = 0;
-	
+
 	if(argc>=3){
 		CES = init_ces();
 		memoria = init_memory(16*1024); // 16K palavras de 16 bits
@@ -36,7 +36,7 @@ int main(int argc, char** argv){
 					CES->regP = (unsigned short int) strtoul(argv[k+1],&p,16);
 				else if(strcmp(argv[k],"-i")==0)
 					eop = (unsigned short int) atoi(argv[k+1]);
-				else if(strcmp(argv[k],"-o")==0) 
+				else if(strcmp(argv[k],"-o")==0)
 					output_file = argv[k+1];
 				else if(strcmp(argv[k],"--interactive")==0)
 					interactive = 1;
@@ -47,7 +47,7 @@ int main(int argc, char** argv){
 		printModoDeUso(argv[0]);
 		return 0;
 	}
-	
+
 	if(file == NULL){
 		printf("Erro na leitura do arquivo\n");
 		return 0;
@@ -57,16 +57,16 @@ int main(int argc, char** argv){
 		printf("Erro na execução do arquivo\n");
 		return -1;
 	}
-	
+
 	fclose(file);
-	
+
 	char* out = (char*) malloc (sizeof(char)*(40*3.5*eop));
 
 	if(output_file!=NULL) output = fopen(output_file,"w");
-	
+
 	//Loop principal do processador
 	for(k=0;k<=eop;k++){
-		//if(memoria[0x3ffe])printf("\n--%hX--\n",memoria[0x3ffe]);
+		//Inicio do tratamento do IO
 		if(inputOutput){
 			printf("%c",memoria[0x3ffe]);
 			memoria[0x3ffe] = 0x0000;
@@ -76,11 +76,12 @@ int main(int argc, char** argv){
 				memoria[0x3fff] = getchar();
 			}
 		}
+		//Fim do tratamento do IO
 
 		// Processador sendo executado neste instante
 		exec(CES,memoria);
 		// Fim da execução do processador
-		
+
 		if(output_file==NULL) memset(out,0,sizeof(char)*strlen(out));
 		printRegistradores(*CES,out);
 

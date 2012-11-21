@@ -6,7 +6,7 @@
 
 void printRegistradores(Processador p, char *st){
 	char *buffer = (char*) malloc (sizeof(char) * 40*3.5);
-	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %X\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
+	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %hX\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
 	strcat(st,buffer);
 }
 
@@ -32,19 +32,13 @@ short int *init_memory(int l){
 }
 
 void SUB(Processador* p,short int* memoria, unsigned short int posMemoria){
-	
-	p->regP++;
-	
-	if(((short int)memoria[posMemoria]==(short int)0) && ((short int)p->regT!=(short int)0))
-		p->regC = 1;
-	else if((short int)memoria[posMemoria]==(short int)0xffff)
-		p->regC = 0;
-	else if((short int)(memoria[posMemoria]-p->regT)<(short int)0)
-		p->regC = 1;
-	else
-		p->regC = 0;
 
-	p->regT = (short int)memoria[posMemoria] - (short int)p->regT;
+	int a =  memoria[posMemoria] < 0 ? memoria[posMemoria] - 0xffff0000 : memoria[posMemoria];
+	int b =  p->regT < 0 ? p->regT - 0xffff0000 : p->regT;
+	p->regC = ((a - b)>>16)&1;
+	p->regT = p->regC ? (a - b) - 0xffff0000 : (a - b);
+
+	p->regP++;
 }
 
 void LE(Processador* p, short int* memoria, unsigned short int posMemoria){

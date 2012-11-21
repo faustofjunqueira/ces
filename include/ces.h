@@ -12,5 +12,5 @@ void SUB(Processador* p,short int* memoria, unsigned short int posMemoria);
 void LE(Processador* p, short int* memoria, unsigned short int posMemoria);
 void ESC(Processador* p, short int* memoria, unsigned short int posMemoria);
 void DNP(Processador* p, unsigned short int posMemoria);
-void exec(Processador* p, short int* memoria,char* out);
+void exec(Processador* p, short int* memoria);
 #endif // CES_H

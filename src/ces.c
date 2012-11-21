@@ -6,7 +6,7 @@
 
 void printRegistradores(Processador p, char *st){
 	char *buffer = (char*) malloc (sizeof(char) * 40*3.5);
-	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %d\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
+	sprintf(buffer,"Registrador P: %hX\nRegistrador T: %X\nResistrador C: %d\n----------------------\n",p.regP,p.regT,p.regC);
 	strcat(st,buffer);
 }
 
@@ -32,31 +32,39 @@ short int *init_memory(int l){
 }
 
 void SUB(Processador* p,short int* memoria, unsigned short int posMemoria){
+	
 	p->regP++;
-	if((p->regT = memoria[posMemoria] - p->regT) < 0)
-		p->regC = 0;
-	else
+	
+	if(((short int)memoria[posMemoria]==(short int)0) && ((short int)p->regT!=(short int)0))
 		p->regC = 1;
+	else if((short int)memoria[posMemoria]==(short int)0xffff)
+		p->regC = 0;
+	else if((short int)(memoria[posMemoria]-p->regT)<(short int)0)
+		p->regC = 1;
+	else
+		p->regC = 0;
+
+	p->regT = (short int)memoria[posMemoria] - (short int)p->regT;
 }
 
 void LE(Processador* p, short int* memoria, unsigned short int posMemoria){
 	p->regP++;
-	p->regT = memoria[posMemoria];
+	p->regT = (short int)memoria[posMemoria];
 }
 
 void ESC(Processador* p, short int* memoria, unsigned short int posMemoria){
 	p->regP++;
-	memoria[posMemoria] = p->regT;
+	memoria[posMemoria] = (short int)p->regT;
 }
 
 void DNP(Processador* p, unsigned short int posMemoria){
-	if(p->regC == 1)
-		p->regP = posMemoria;
+	if(p->regC == 0)
+		p->regP = (unsigned short int)posMemoria;
 	else
 		p->regP++;
 }
 
-void exec(Processador* p, short int* memoria,char* out){
+void exec(Processador* p, short int* memoria){
 	switch(((memoria[p->regP]>>14)-0xFFFFFFFC)%4){
 		case 0:
 			LE(p,memoria,memoria[p->regP]);
@@ -71,5 +79,4 @@ void exec(Processador* p, short int* memoria,char* out){
 			DNP(p,memoria[p->regP]-0xc000);
 			break;
 	}
-	printRegistradores(*p, out);
 }

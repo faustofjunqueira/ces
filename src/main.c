@@ -68,11 +68,10 @@ int main(int argc, char** argv){
 	for(k=0;k<eop;k++){
 		//Inicio do tratamento do IO
 		if(inputOutput){
-			printf("%c",memoria[0x3ffe]);
-			memoria[0x3ffe] = 0x0000;
-			if(memoria[CES->regP]==0x3fff){
-				memoria[0x3fff] = getchar();
-			}
+			fputc(memoria[0x3ffe],stdout); //imprime o caracter de stdout
+			memoria[0x3ffe] = 0x0000; // limpa stdout do ces
+			memoria[0x3fff] = 0x0000; // limpa stdin do ces
+			if(memoria[CES->regP]==0x3fff) memoria[0x3fff] = fgetc(stdin); //captura caracter de stdin
 		}
 		//Fim do tratamento do IO
 		
@@ -80,14 +79,16 @@ int main(int argc, char** argv){
 		exec(CES,memoria);
 		// Fim da execução do processador
 		
+		// Produzindo saída
 		if(output_file==NULL) memset(out,0,sizeof(char)*strlen(out));
 		printRegistradores(*CES,out);
-
+		
 		if(interactive){
 			printf("%s",out);
 			if(output_file!=NULL) fprintf(output,"%s",out);
-			getchar();
+			fgetc(stdin);
 		}
+		// Fim da produção de saída
 	}
 
 	if(output_file!=NULL){

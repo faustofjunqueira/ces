@@ -18,7 +18,7 @@ Processador *init_ces(){
 	return p;
 }
 
-short int *init_memory(int l){
+short int *init_memory(short int l){
 	if(l > 0x3FF){
 	short int *memory = (short int*) malloc (sizeof(short int)*l);
 		memset(memory, 0, sizeof(short int)*l);

@@ -7,7 +7,7 @@ typedef struct{
 }Processador;
 void printRegistradores(Processador p, char *st);
 Processador *init_ces();
-short int *init_memory(int l);
+short int *init_memory(short int l);
 void SUB(Processador* p,short int* memoria, unsigned short int posMemoria);
 void LE(Processador* p, short int* memoria, unsigned short int posMemoria);
 void ESC(Processador* p, short int* memoria, unsigned short int posMemoria);
